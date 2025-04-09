@@ -17,14 +17,19 @@
 
 <script setup>
 import { ref } from 'vue'
+const props = defineProps({
+  journalEntries: Array,
+})
+
 const newEntry = ref('')
 const journalEntries = ref('')
 
 function addEntry() {
   if (newEntry.value.trim()) {
-    journalEntries.value.push(newEntry.value.trim())
+    props.journalEntries.push(newEntry.value.trim())
     newEntry.value = ''
   }
+  console.log(journalEntries)
 }
 </script>
 
