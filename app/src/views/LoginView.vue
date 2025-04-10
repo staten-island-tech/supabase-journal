@@ -1,5 +1,17 @@
 <template>
-  <div class="sign-in">
+  <div>
+    <h1>Login</h1>
+    <div v-if="auth.user">
+      <p>Welcome, {{ auth.user.email }}</p>
+      <button @click="auth.signOut">Sign Out</button>
+    </div>
+
+    <div v-else>
+      <input v-model="email" type="email" placeholder="Email" />
+      <input v-model="password" type="password" placeholder="Password" />
+      <button @click="handleSignIn">Sign In</button>
+    </div>
+
     <form class="form">
       <label class="" for="email">Email:</label>
       <input type="text" name="email" placeholder="Email" />
