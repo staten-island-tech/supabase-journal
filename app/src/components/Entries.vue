@@ -6,31 +6,48 @@
       <button type="submit">Add entry</button>
     </form>
 
-    <h2>Entries</h2>
-    <ul>
-      <li v-for="(entry, index) in journalEntries" :key="index" class="indiv-entry">
-        {{ entry }}
-      </li>
-    </ul>
+    <li class="entry-item">{{ entry }}</li>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-const props = defineProps({
-  journalEntries: Array,
+defineProps({
+  entry: String,
 })
 
 const newEntry = ref('')
-const journalEntries = ref('')
+const journalEntries = []
 
 function addEntry() {
   if (newEntry.value.trim()) {
-    props.journalEntries.push(newEntry.value.trim())
+    journalEntries.push(newEntry.value.trim())
     newEntry.value = ''
   }
   console.log(journalEntries)
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.head {
+  font-size: 2em;
+  text-align: center;
+}
+
+textarea {
+  width: 100%;
+  height: 70px;
+  margin-bottom: 10px;
+}
+
+button {
+  display: block;
+  margin: 10px auto;
+}
+
+.indiv-entry {
+  margin: 5px 0;
+  padding: 5px;
+  border: 1px solid #ccc;
+}
+</style>
