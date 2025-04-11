@@ -6,7 +6,17 @@
       <button type="submit">Add entry</button>
     </form>
 
-    <li class="entry-item">{{ entry }}</li>
+    <ul>
+      <li
+        v-for="entry in journalEntries"
+        :key="entry.date"
+        :entry="entry"
+        ref="entries"
+        class="indiv-entry"
+      >
+        {{ entry }}
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -23,6 +33,9 @@ function addEntry() {
   if (newEntry.value.trim()) {
     journalEntries.push(newEntry.value.trim())
     newEntry.value = ''
+    return {
+      journalEntries,
+    }
   }
   console.log(journalEntries)
 }
@@ -49,5 +62,6 @@ button {
   margin: 5px 0;
   padding: 5px;
   border: 1px solid #ccc;
+  background-color: aliceblue;
 }
 </style>

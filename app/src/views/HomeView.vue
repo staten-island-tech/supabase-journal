@@ -10,7 +10,6 @@
         ref="entries"
         class="indi"
       >
-        {{ entry }}
       </Entries>
     </ul>
   </div>
