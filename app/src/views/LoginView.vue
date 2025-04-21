@@ -28,5 +28,3 @@ const login = async () => {
   }
 }
 </script>
-
-<style lang="" scoped></style>
