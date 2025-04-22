@@ -11,15 +11,31 @@
       </button>
     </form>
 
-    <ul>
+    <ul class="mt-6 space-y-4">
       <li
-        v-for="entry in journalEntries"
-        :key="entry.date"
-        :entry="entry"
-        ref="entries"
-        class="indiv-entry"
+        v-for="(entry, index) in journalEntries"
+        :key="index"
+        class="p-4 bg-white rounded shadow-md border border-blue-100"
       >
-        {{ entry }}
+        <p class="text-sm text-gray-500 mb-2">
+          📝 Entry on <span class="font-semibold">{{ entry.date }}</span
+          >:
+        </p>
+        <p class="text-gray-700 leading-relaxed">"{{ entry.text }}"</p>
+        <div class="inline-flex">
+          <button
+            @click="editEntry"
+            class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+          >
+            Edit
+          </button>
+          <button
+            @click="deleteEntry"
+            class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+          >
+            Delete
+          </button>
+        </div>
       </li>
     </ul>
   </div>
@@ -27,23 +43,24 @@
 
 <script setup>
 import { ref } from 'vue'
-defineProps({
-  entry: String,
-})
 
 const newEntry = ref('')
-const journalEntries = []
+const journalEntries = ref([])
 
 function addEntry() {
   if (newEntry.value.trim()) {
-    journalEntries.push(newEntry.value.trim())
+    journalEntries.value.push({
+      date: new Date().toLocaleString(),
+      text: newEntry.value.trim(),
+    })
     newEntry.value = ''
-    return {
-      journalEntries,
-    }
   }
   console.log(journalEntries)
 }
+
+function editEntry() {}
+
+function deleteEntry() {}
 </script>
 
 <style scoped>

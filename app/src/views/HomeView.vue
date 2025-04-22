@@ -1,7 +1,6 @@
 <template>
   <div>
     <Entries />
-    <h2>Entries</h2>
   </div>
 </template>
 
