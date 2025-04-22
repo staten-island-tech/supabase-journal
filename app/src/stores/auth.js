@@ -1,43 +1,40 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { supabase } from './supabaseClient' 
 
 
-export const userAuthStore = defineStore('auth', () => {
-  const isLoggedIn = ref(false)
-
-  function login() {
-    isLoggedIn.value = true
-  }
-
-  function logout() {
-    isLoggedIn.value = false
-  }
-})
 
 export const useStore = defineStore ('auth',() => {
-    const user = ref()
-    const session = ref()
-    const error = ref()
+    const user = ref(null)
+    const session = ref(null)
+    const error = ref(null)
   
-    const signin = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    })
-  
-    if (error) {
-      throw error
-    }
-  
-    console.log('Logged in user:', user)
-    console.log('Session info:', session)
-  } catch (error) {
-    console.error('Error during sign-in:', error.message)
-  });
-  
+    const login = async (email, password) => {
+        try {
+            const { data, error: error }  = supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+            })
+        
+          if (error) {
+            throw error
+          }
+        
+          user.value = data.value
+          session.value = data.session
+          console.log('User:', user.value)
+          console.log('Session:', session.value)
+        } catch (error) {
+          console.error(error.message)
+        }
   export const signOut = async () => {
-    await supabase.auth.signOut()
-    user.value = ('')
-    password.value =('')}
-
-  export default supabase
-  
+            try {
+                await supabase.auth.signOut()
+                user.value = null
+                password.value = null }
+            catch{
+                console.log(error.message)
+            }
+            }
+        })
+      

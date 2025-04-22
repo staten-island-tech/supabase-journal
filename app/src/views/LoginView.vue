@@ -22,7 +22,7 @@ const password = ref('')
 
 const login = async () => {
   try {
-    await auth.signInWithEmail(email.value, password.value)
+    await auth.signInWithPassword(email.value, password.value)
   } catch {
     console.log(error.message)
   }
