@@ -1,7 +1,7 @@
 <template>
   <div class="calendar">
-    <div class="calendar-header">
-      <div class="inline-flex">
+    <div class="max-w-xl mx-auto mt-8">
+      <div class="flex justify-between items-center mb-4">
         <button
           class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l"
           @click="goToPreviousMonth"
@@ -18,7 +18,7 @@
       </div>
     </div>
 
-    <div class="calendar-grid">
+    <div class="grid grid-cols-7 gap-1">
       <div class="day-name" v-for="day in daysOfWeek" :key="day">{{ day }}</div>
       <div
         class="day"
