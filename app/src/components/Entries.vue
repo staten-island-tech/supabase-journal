@@ -21,16 +21,24 @@
           📝 Entry on <span class="font-semibold">{{ entry.date }}</span
           >:
         </p>
+
+        <div v-if="editingIndex === index">
+          <button @click="saveEdit(index)" class="bg-green-300 text-white px-3 py-1 mr-2 rounded">
+            Save
+          </button>
+          <button @click="cancelEdit(index)" class="bg-gray-300 px-3 py-1 rounded">Cancel</button>
+        </div>
+
         <p class="text-gray-700 leading-relaxed">"{{ entry.text }}"</p>
         <div class="inline-flex">
           <button
-            @click="editEntry"
+            @click="editEntry(index)"
             class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
           >
             Edit
           </button>
           <button
-            @click="deleteEntry"
+            @click="deleteEntry(index)"
             class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
           >
             Delete
@@ -46,6 +54,8 @@ import { ref } from 'vue'
 
 const newEntry = ref('')
 const journalEntries = ref([])
+const editedText = ref('')
+const editingIndex = ref('')
 
 function addEntry() {
   if (newEntry.value.trim()) {
@@ -58,8 +68,26 @@ function addEntry() {
   console.log(journalEntries)
 }
 
-function editEntry() {}
+function editEntry(index) {
+  editingIndex.value = index
+  editedText.value = journalEntries[index].value
+}
 
+function saveEdit(index) {
+  if (editedText.value.trim()) {
+    journalEntries[index].value.push({
+      date: new Date().toLocaleString(),
+      text: editedText.value.trim(),
+    })
+    editedText.value = ''
+  }
+  console.log(journalEntries)
+}
+
+function cancelEdit() {
+  editedText === null
+  return
+}
 function deleteEntry() {}
 </script>
 
