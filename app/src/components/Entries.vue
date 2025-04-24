@@ -23,7 +23,7 @@
         </p>
 
         <div v-if="editingIndex === index">
-          <input v-model="journalEntries[index].text" class="w-full h-40 border rounded p-2 mb-2" />
+          <textarea v-model="editedText" class="w-full h-40 border rounded p-2 mb-2"></textarea>
           <button @click="saveEdit(index)" class="bg-green-300 text-white px-3 py-1 mr-2 rounded">
             Save
           </button>
@@ -56,7 +56,7 @@ import { ref } from 'vue'
 const newEntry = ref('')
 const journalEntries = ref([])
 const editedText = ref('')
-const editingIndex = ref()
+const editingIndex = ref('')
 
 function addEntry() {
   if (newEntry.value.trim()) {
