@@ -23,13 +23,14 @@
         </p>
 
         <div v-if="editingIndex === index">
+          <input v-model="journalEntries[index].text" class="w-full h-40 border rounded p-2 mb-2" />
           <button @click="saveEdit(index)" class="bg-green-300 text-white px-3 py-1 mr-2 rounded">
             Save
           </button>
           <button @click="cancelEdit(index)" class="bg-gray-300 px-3 py-1 rounded">Cancel</button>
         </div>
 
-        <p class="text-gray-700 leading-relaxed">"{{ entry.text }}"</p>
+        <p v-else class="text-gray-700 leading-relaxed">"{{ entry.text }}"</p>
         <div class="inline-flex">
           <button
             @click="editEntry(index)"
@@ -55,7 +56,7 @@ import { ref } from 'vue'
 const newEntry = ref('')
 const journalEntries = ref([])
 const editedText = ref('')
-const editingIndex = ref('')
+const editingIndex = ref()
 
 function addEntry() {
   if (newEntry.value.trim()) {
@@ -70,25 +71,25 @@ function addEntry() {
 
 function editEntry(index) {
   editingIndex.value = index
-  editedText.value = journalEntries[index].value
+  editedText.value = journalEntries.value[index].text
 }
 
 function saveEdit(index) {
   if (editedText.value.trim()) {
-    journalEntries[index].value.push({
-      date: new Date().toLocaleString(),
-      text: editedText.value.trim(),
-    })
+    journalEntries.value[index].text = editedText.value.trim()
+    editingIndex.value = null
     editedText.value = ''
   }
-  console.log(journalEntries)
+  console.log(editedText)
 }
 
 function cancelEdit() {
-  editedText === null
-  return
+  editingIndex.value = null
+  editedText.value = ''
 }
-function deleteEntry() {}
+function deleteEntry(index) {
+  journalEntries.value.splice(index, 1)
+}
 </script>
 
 <style scoped>
