@@ -108,11 +108,4 @@ button {
   display: block;
   margin: 10px auto;
 }
-
-.indiv-entry {
-  margin: 5px 0;
-  padding: 5px;
-  border: 1px solid #ccc;
-  background-color: aliceblue;
-}
 </style>
