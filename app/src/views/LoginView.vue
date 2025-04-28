@@ -3,7 +3,7 @@
     <h>Please Login!</h>
     <div v-if="auth.user">
       <p>Welcome, {{ auth.user.email }}</p>
-      <button @submit.prevent="auth.signOut">Sign Out</button>
+      <button @click="auth.signOut">Sign Out</button>
     </div>
     <div v-else>
       <form @submit.prevent="login">
