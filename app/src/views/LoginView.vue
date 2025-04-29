@@ -1,11 +1,11 @@
 <template>
   <div class="container">
-    <h>Please Login!</h>
     <div v-if="auth.user">
       <p>Welcome, {{ auth.user.email }}</p>
       <button @click="auth.signOut">Sign Out</button>
     </div>
     <div v-else>
+      <h>Please Login!</h>
       <form @submit.prevent="login">
         <input v-model="email" type="email" placeholder="Email" />
         <input v-model="password" type="password" placeholder="Password" />
