@@ -16,7 +16,7 @@
       </button>
     </div>
 
-    <div class="grid grid-cols-7 gap-1">
+    <div class="grid grid-cols-7 gap-2 text-center text-sm text-gray-600">
       <div class="day-name" v-for="day in daysOfWeek" :key="day">{{ day }}</div>
       <div class="day" v-for="(day, index) in calendarDays" :key="index">
         {{ currentDate }}
@@ -29,6 +29,8 @@
 import { ref, computed } from 'vue'
 
 const currentDate = ref(new Date())
+const currentMonth = ref(currentDate.value.getMonth())
+const currentYear = ref(currentDate.value.getFullYear())
 
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const months = [
@@ -63,9 +65,12 @@ function nextMonth() {
   currentDate.value = date
 }
 
-const calendarDays = computed(() => {
-  const year = currentDate.value.getFullYear()
-  const month = currentDate.value.getMonth()
+const daysInMonth = computed(() => {
+  return new Date(currentYear.value, currentMonth.value + 1, 0).getDate()
+})
+
+const firstDayOfMonth = computed(() => {
+  return new Date(currentYear.value, currentMonth.value, 1).getDay()
 })
 </script>
 
