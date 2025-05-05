@@ -51,7 +51,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useJournalStore } from '@/stores/journalStore'
 
 const newEntry = ref('')
 const journalEntries = ref([])
