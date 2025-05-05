@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="head">My Journal</h1>
-    <form @submit.prevent="addEntry">
+    <form @submit.prevent="addNewEntry">
       <textarea v-model="newEntry" placeholder="Write new entry here..."></textarea>
       <button
         class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
@@ -39,7 +39,7 @@
             Edit
           </button>
           <button
-            @click="deleteEntry(index)"
+            @click="deletejEntry(index)"
             class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
           >
             Delete
@@ -53,18 +53,23 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useJournalStore } from '@/stores/journalStore'
+import { useAuthStore } from '@/stores/auth'
 
 const newEntry = ref('')
-const journalEntries = ref([])
 const editedText = ref('')
 const editingIndex = ref('')
+const { journalEntries, loadEntries, addEntry, deleteEntry } = useJournalStore()
+const { user } = useAuthStore()
 
-function addEntry() {
-  if (newEntry.value.trim()) {
-    journalEntries.value.push({
-      date: new Date().toLocaleString(),
-      text: newEntry.value.trim(),
-    })
+onMounted(() => {
+  if (user.value) {
+    loadEntries(user.value.id)
+  }
+})
+
+function addNewEntry() {
+  if (newEntry.value.trim() && user.value) {
+    addEntry(user.value.id, newEntry.value.trim())
     newEntry.value = ''
   }
   console.log(journalEntries)
@@ -88,8 +93,8 @@ function cancelEdit() {
   editingIndex.value = null
   editedText.value = ''
 }
-function deleteEntry(index) {
-  journalEntries.value.splice(index, 1)
+function deletejEntry(entryID) {
+  deleteEntry(entryID)
 }
 </script>
 
