@@ -1,5 +1,5 @@
 <template>
-  <div class="about">
+  <div class="calendar">
     <Calendar />
   </div>
 </template>
@@ -10,7 +10,7 @@ import Calendar from '../components/Calendar.vue'
 
 <style>
 @media (min-width: 1024px) {
-  .about {
+  .calendar {
     min-height: 100vh;
     display: flex;
     align-items: center;
