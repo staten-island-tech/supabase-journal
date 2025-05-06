@@ -24,8 +24,10 @@
 
 <script setup>
 import { useAuthStore } from '@/stores/auth'
+import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 
+const router = useRouter()
 const auth = useAuthStore()
 const email = ref('')
 const password = ref('')
