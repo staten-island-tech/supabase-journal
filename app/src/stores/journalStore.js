@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { supabase } from '../supabaseClient'
+import { supabase } from '../lib/supabaseClient'
 
 export const useJournalStore = defineStore('journal', () => {
   const journalEntries = ref([])

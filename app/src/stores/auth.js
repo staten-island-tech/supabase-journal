@@ -17,9 +17,11 @@ export const useAuthStore = defineStore('auth', () => {
 
       user.value = data.user
       console.log('User:', user.value)
+      return true
     } catch (err) {
       error.value = issue.message
       console.error('Login issue:', issue.message)
+      return false
     }
   }
 

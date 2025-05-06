@@ -5,7 +5,7 @@
       <button @click="auth.signOut">Sign Out</button>
     </div>
     <div v-else>
-      <h>Please Login!</h>
+      <h1>Please Login!</h1>
       <form @submit.prevent="login">
         <input v-model="email" type="email" placeholder="Email" />
         <input v-model="password" type="password" placeholder="Password" />
@@ -35,7 +35,12 @@ const newPassword = ref('')
 const fullName = ref('')
 
 const login = async () => {
-  await auth.signInWithPassword(email.value, password.value)
+  const success = await auth.signInWithPassword(email.value, password.value)
+  if (success) {
+    router.push('/home')
+  } else {
+    console.error('Login failed, please check your credentials.')
+  }
 }
 
 const signup = async () => {

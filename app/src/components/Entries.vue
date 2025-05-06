@@ -61,9 +61,12 @@ const editingIndex = ref('')
 const { journalEntries, loadEntries, addEntry, deleteEntry } = useJournalStore()
 const { user } = useAuthStore()
 
-onMounted(() => {
+onMounted(async () => {
   if (user.value) {
-    loadEntries(user.value.id)
+    await loadEntries(user.value.id)
+  } else {
+    console.error('User is not logged in.')
+    router.push('/login')
   }
 })
 
