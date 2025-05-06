@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 bg-white rounded shadow-xl">
+  <div class="calendar p-5 bg-white rounded shadow-xl">
     <FullCalendar :options="calendarOptions" />
   </div>
 </template>
@@ -32,6 +32,7 @@ const calendarOptions = {
   eventClick: handleEventClick,
   eventsSet: handleEvents,
   events: [],
+  contentHeight: 'auto',
 }
 
 function handleDateSelect(selectInfo) {
@@ -62,4 +63,8 @@ function handleEvents(events) {
 }
 </script>
 
-<style></style>
+<style>
+.calendar {
+  height: 40rem;
+}
+</style>

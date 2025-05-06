@@ -1,5 +1,5 @@
 <template>
-  <div class="calendar">
+  <div class="min-h-screen flex flex-col items-center text-center p-4">
     <Calendar />
   </div>
 </template>
@@ -8,12 +8,4 @@
 import Calendar from '../components/Calendar.vue'
 </script>
 
-<style>
-@media (min-width: 1024px) {
-  .calendar {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
-</style>
+<style></style>
