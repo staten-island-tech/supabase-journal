@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="head">My Journal</h1>
-    <form @submit.prevent="addNewEntry">
+    <form @submit.prevent="addEntryII">
       <textarea v-model="newEntry" placeholder="Write new entry here..."></textarea>
       <button
         class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
@@ -13,7 +13,7 @@
 
     <ul class="mt-6 space-y-4">
       <li
-        v-for="(entry, index) in journalEntries"
+        v-for="(entry, index) in journalStore.journalEntries"
         :key="index"
         class="p-4 bg-white rounded shadow-md border border-blue-100"
       >
@@ -39,7 +39,7 @@
             Edit
           </button>
           <button
-            @click="deletejEntry(index)"
+            @click="deleteEntryII(index)"
             class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
           >
             Delete
@@ -54,38 +54,40 @@
 import { ref, onMounted } from 'vue'
 import { useJournalStore } from '@/stores/journalStore'
 import { useAuthStore } from '@/stores/auth'
+import { useRouter } from 'vue-router'
 
 const newEntry = ref('')
 const editedText = ref('')
 const editingIndex = ref('')
-const { journalEntries, loadEntries, addEntry, deleteEntry } = useJournalStore()
+const journalStore = useJournalStore()
 const { user } = useAuthStore()
+const router = useRouter()
 
 onMounted(async () => {
-  if (user.value) {
-    await loadEntries(user.value.id)
+  if (user && user.value) {
+    await journalStore.loadEntries(user.value.id)
   } else {
     console.error('User is not logged in.')
-    router.push('/login')
+    router.push('/')
   }
+  console.log('user:', user)
 })
 
-function addNewEntry() {
+function addEntryII() {
   if (newEntry.value.trim() && user.value) {
-    addEntry(user.value.id, newEntry.value.trim())
+    journalStore.addEntry(user.value.id, newEntry.value.trim())
     newEntry.value = ''
   }
-  console.log(journalEntries)
 }
 
 function editEntry(index) {
   editingIndex.value = index
-  editedText.value = journalEntries.value[index].text
+  editedText.value = journalStore.journalEntries.value[index].text
 }
 
 function saveEdit(index) {
   if (editedText.value.trim()) {
-    journalEntries.value[index].text = editedText.value.trim()
+    journalStore.journalEntries.value[index].text = editedText.value.trim()
     editingIndex.value = null
     editedText.value = ''
   }
@@ -96,8 +98,8 @@ function cancelEdit() {
   editingIndex.value = null
   editedText.value = ''
 }
-function deletejEntry(entryID) {
-  deleteEntry(entryID)
+function deleteEntryII(entryID) {
+  journalStore.deleteEntry(entryID)
 }
 </script>
 
