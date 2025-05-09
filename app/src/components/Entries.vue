@@ -51,7 +51,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 import { useJournalStore } from '@/stores/journalStore'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
@@ -63,20 +63,28 @@ const journalStore = useJournalStore()
 const { user } = useAuthStore()
 const router = useRouter()
 
-onMounted(async () => {
-  if (user && user.value) {
-    await journalStore.loadEntries(user.value.id)
-  } else {
-    console.error('User is not logged in.')
-    router.push('/')
-  }
-  console.log('user:', user)
-})
+watch(
+  user,
+  async (newUser) => {
+    if (newUser) {
+      await journalStore.loadEntries(newUser.id)
+    } else {
+      console.error('User is not logged in.')
+      router.push('/')
+    }
+  },
+  { immediate: true },
+)
 
 function addEntryII() {
+  console.log('Attempting to add entry...')
   if (newEntry.value.trim() && user.value) {
-    journalStore.addEntry(user.value.id, newEntry.value.trim())
+    console.log('User ID:', userID.value)
+    console.log('Text:', newEntry.value)
+    journalStore.addEntry(userID.value, newEntry.value.trim())
     newEntry.value = ''
+  } else {
+    console.warn('User not logged in or empty text')
   }
 }
 
