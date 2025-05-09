@@ -51,7 +51,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { supabase } from '../lib/supabaseClient'
 
 const newEntry = ref('')
@@ -59,27 +59,18 @@ const journalEntries = ref([])
 const editedText = ref('')
 const editingIndex = ref('')
 
-onMounted(async () => {
-  const { data: authUser, error } = await supabase.auth.getUser()
-  const user = authUser?.user
-
-  if (user.value) {
-    await loadEntries()
-  }
-})
-
-async function loadEntries() {
-  const { data, error } = await supabase
-    .from('journals')
-    .select('*')
-    .eq('user_id')
-    .order('created_at')
+const getUser = async () => {
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
 
   if (error) {
-    console.error('Error loading entries:', error.message)
-  } else {
-    journalEntries.value = data
+    console.error(error.message)
+    return null
   }
+
+  return user
 }
 
 function addEntry() {
@@ -111,8 +102,26 @@ function cancelEdit() {
   editingIndex.value = null
   editedText.value = ''
 }
+
 function deleteEntry(index) {
   journalEntries.value.splice(index, 1)
+}
+
+const loadJournals = async () => {
+  const user = await getUser()
+  if (!user) return
+
+  const { data, error } = await supabase
+    .from('journals')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error(error.message)
+  } else {
+    journals.value = data
+  }
 }
 </script>
 
