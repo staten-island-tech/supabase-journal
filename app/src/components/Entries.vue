@@ -1,52 +1,57 @@
 <template>
   <div>
-    <h1 class="head">My Journal</h1>
-    <form @submit.prevent="addEntry">
-      <textarea v-model="newEntry" placeholder="Write new entry here..."></textarea>
-      <button
-        class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
-        type="submit"
-      >
-        Add entry
-      </button>
-    </form>
+    <div v-if="user">
+      <h1 class="head">My Journal</h1>
+      <form @submit.prevent="addEntry">
+        <textarea v-model="newEntry" placeholder="Write new entry here..."></textarea>
+        <button
+          class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
+          type="submit"
+        >
+          Add entry
+        </button>
+      </form>
 
-    <ul class="mt-6 space-y-4">
-      <li
-        v-for="(entry, index) in journalEntries"
-        :key="index"
-        class="p-4 bg-white rounded shadow-md border border-blue-100"
-      >
-        <p class="text-sm text-gray-500 mb-2">
-          📝 Entry on <span class="font-semibold">{{ entry.date }}</span
-          >:
-        </p>
+      <ul class="mt-6 space-y-4">
+        <li
+          v-for="(entry, index) in journalEntries"
+          :key="index"
+          class="p-4 bg-white rounded shadow-md border border-blue-100"
+        >
+          <p class="text-sm text-gray-500 mb-2">
+            📝 Entry on <span class="font-semibold">{{ entry.date }}</span
+            >:
+          </p>
 
-        <div v-if="editingIndex === index">
-          <textarea v-model="editedText" class="w-full h-40 border rounded p-2 mb-2"></textarea>
-          <button @click="saveEdit(index)" class="bg-green-300 text-white px-3 py-1 mr-2 rounded">
-            Save
-          </button>
-          <button @click="cancelEdit(index)" class="bg-gray-300 px-3 py-1 rounded">Cancel</button>
-        </div>
+          <div v-if="editingIndex === index">
+            <textarea v-model="editedText" class="w-full h-40 border rounded p-2 mb-2"></textarea>
+            <button @click="saveEdit(index)" class="bg-green-300 text-white px-3 py-1 mr-2 rounded">
+              Save
+            </button>
+            <button @click="cancelEdit(index)" class="bg-gray-300 px-3 py-1 rounded">Cancel</button>
+          </div>
 
-        <p v-else class="text-gray-700 leading-relaxed">"{{ entry.text }}"</p>
-        <div class="inline-flex">
-          <button
-            @click="editEntry(index)"
-            class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
-          >
-            Edit
-          </button>
-          <button
-            @click="deleteEntry(index)"
-            class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
-          >
-            Delete
-          </button>
-        </div>
-      </li>
-    </ul>
+          <p v-else class="text-gray-700 leading-relaxed">"{{ entry.text }}"</p>
+          <div class="inline-flex">
+            <button
+              @click="editEntry(index)"
+              class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+            >
+              Edit
+            </button>
+            <button
+              @click="deleteEntry(index)"
+              class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+            >
+              Delete
+            </button>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div v-else>
+      <p>Please log in to view your journal.</p>
+    </div>
   </div>
 </template>
 
