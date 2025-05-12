@@ -78,10 +78,12 @@ watch(
 
 function addEntryII() {
   console.log('Attempting to add entry...')
+  console.log('newEntry:', newEntry.value)
+  console.log('user:', user.value)
   if (newEntry.value.trim() && user.value) {
-    console.log('User ID:', userID.value)
+    console.log('User ID:', user.value.id)
     console.log('Text:', newEntry.value)
-    journalStore.addEntry(userID.value, newEntry.value.trim())
+    journalStore.addEntry(user.value.id, newEntry.value.trim())
     newEntry.value = ''
   } else {
     console.warn('User not logged in or empty text')

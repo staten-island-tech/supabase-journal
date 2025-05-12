@@ -22,6 +22,7 @@ export const useJournalStore = defineStore('journal', () => {
       console.log(error)
     } else {
       journalEntries.value.unshift(data)
+      return { success: true, data }
     }
   }
   async function deleteEntry(entryID) {
