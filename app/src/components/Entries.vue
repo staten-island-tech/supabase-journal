@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="user">
+    <div v-if="auth.user">
       <h1 class="head">My Journal</h1>
       <form @submit.prevent="addEntry">
         <textarea v-model="newEntry" placeholder="Write new entry here..."></textarea>
@@ -58,35 +58,44 @@
 <script setup>
 import { ref } from 'vue'
 import { supabase } from '../lib/supabaseClient'
+import { useAuthStore } from '@/stores/auth'
+import { onMounted } from 'vue'
 
+onMounted(() => {
+  loadEntries()
+})
+
+const auth = useAuthStore()
 const newEntry = ref('')
 const journalEntries = ref([])
 const editedText = ref('')
 const editingIndex = ref('')
 
-const getUser = async () => {
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser()
+async function loadEntries() {
+  const userId = await getUserId()
+  if (!userId) return
+
+  const { data, error } = await supabase
+    .from('journal')
+    .select('content, created_at')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
 
   if (error) {
     console.error(error.message)
-    return null
+    return
   }
 
-  return user
+  journalEntries.value = data.map((entry) => ({
+    date: new Date(entry.created_at).toLocaleString(),
+    text: entry.content,
+  }))
 }
 
-function addEntry() {
-  if (newEntry.value.trim()) {
-    journalEntries.value.push({
-      date: new Date().toLocaleString(),
-      text: newEntry.value.trim(),
-    })
-    newEntry.value = ''
-  }
-  console.log(journalEntries)
+async function getUserId() {
+  const result = await supabase.auth.getUser()
+  if (!result.data.user) return null
+  return result.data.user.id
 }
 
 function editEntry(index) {
