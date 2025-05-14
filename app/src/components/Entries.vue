@@ -1,7 +1,8 @@
+@ -1,118 +1,111 @@
 <template>
   <div>
     <h1 class="head">My Journal</h1>
-    <form @submit.prevent="addEntryII">
+    <form @submit.prevent="addEntry">
       <textarea v-model="newEntry" placeholder="Write new entry here..."></textarea>
       <button
         class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
@@ -13,7 +14,7 @@
 
     <ul class="mt-6 space-y-4">
       <li
-        v-for="(entry, index) in journalStore.journalEntries"
+        v-for="(entry, index) in journalEntries"
         :key="index"
         class="p-4 bg-white rounded shadow-md border border-blue-100"
       >
@@ -39,7 +40,7 @@
             Edit
           </button>
           <button
-            @click="deleteEntryII(index)"
+            @click="deleteEntry(index)"
             class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
           >
             Delete
@@ -51,53 +52,32 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
-import { useJournalStore } from '@/stores/journalStore'
-import { useAuthStore } from '@/stores/auth'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue'
 
 const newEntry = ref('')
+const journalEntries = ref([])
 const editedText = ref('')
 const editingIndex = ref('')
-const journalStore = useJournalStore()
-const { user } = useAuthStore()
-const router = useRouter()
 
-watch(
-  user,
-  async (newUser) => {
-    if (newUser) {
-      await journalStore.loadEntries(newUser.id)
-    } else {
-      console.error('User is not logged in.')
-      router.push('/')
-    }
-  },
-  { immediate: true },
-)
-
-function addEntryII() {
-  console.log('Attempting to add entry...')
-  console.log('newEntry:', newEntry.value)
-  console.log('user:', user.value)
-  if (newEntry.value.trim() && user.value) {
-    console.log('User ID:', user.value.id)
-    console.log('Text:', newEntry.value)
-    journalStore.addEntry(user.value.id, newEntry.value.trim())
+function addEntry() {
+  if (newEntry.value.trim()) {
+    journalEntries.value.push({
+      date: new Date().toLocaleString(),
+      text: newEntry.value.trim(),
+    })
     newEntry.value = ''
-  } else {
-    console.warn('User not logged in or empty text')
   }
+  console.log(journalEntries)
 }
 
 function editEntry(index) {
   editingIndex.value = index
-  editedText.value = journalStore.journalEntries.value[index].text
+  editedText.value = journalEntries.value[index].text
 }
 
 function saveEdit(index) {
   if (editedText.value.trim()) {
-    journalStore.journalEntries.value[index].text = editedText.value.trim()
+    journalEntries.value[index].text = editedText.value.trim()
     editingIndex.value = null
     editedText.value = ''
   }
@@ -108,8 +88,8 @@ function cancelEdit() {
   editingIndex.value = null
   editedText.value = ''
 }
-function deleteEntryII(entryID) {
-  journalStore.deleteEntry(entryID)
+function deleteEntry(index) {
+  journalEntries.value.splice(index, 1)
 }
 </script>
 
