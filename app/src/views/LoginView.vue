@@ -34,7 +34,7 @@
         </button>
       </form>
 
-      <form @submit.prevent="signup">
+      <form @submit.prevent="signup" class="space-y-2 mb-6">
         <input
           v-model="newEmail"
           type="email"
