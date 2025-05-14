@@ -92,6 +92,26 @@ async function loadEntries() {
   }))
 }
 
+function addEntry() {
+  if (newEntry.value.trim()) {
+    journalEntries.value.push({
+      date: new Date().toLocaleString(),
+      text: newEntry.value.trim(),
+    })
+    newEntry.value = ''
+  }
+  console.log(journalEntries)
+}
+
+const addJournalEntry = async () => {
+  const { data, error } = await supabase.from('journal').insert([
+    {
+      title: title.value,
+      content: content.value,
+    },
+  ])
+}
+
 async function getUserId() {
   const result = await supabase.auth.getUser()
   if (!result.data.user) return null
@@ -119,23 +139,6 @@ function cancelEdit() {
 
 function deleteEntry(index) {
   journalEntries.value.splice(index, 1)
-}
-
-const loadJournals = async () => {
-  const user = await getUser()
-  if (!user) return
-
-  const { data, error } = await supabase
-    .from('journals')
-    .select('*')
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false })
-
-  if (error) {
-    console.error(error.message)
-  } else {
-    journals.value = data
-  }
 }
 </script>
 
