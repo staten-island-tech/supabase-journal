@@ -1,3 +1,4 @@
+@ -1,118 +1,111 @@
 <template>
   <div>
     <h1 class="head">My Journal</h1>

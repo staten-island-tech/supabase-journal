@@ -1,9 +1,7 @@
 <template>
-  <div>
-    <Entries />
+  <div class="min-h-screen flex flex-col items-center text-center p-4">
+    <h1>Welcome!</h1>
   </div>
 </template>
 
-<script setup>
-import Entries from '../components/Entries.vue'
-</script>
+<script setup></script>
