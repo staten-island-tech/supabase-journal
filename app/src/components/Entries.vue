@@ -52,41 +52,46 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { supabase } from '../lib/supabaseClient'
+import { useAuthStore } from '@/stores/auth'
+import { onMounted } from 'vue'
 
+onMounted(() => {
+  loadEntries()
+})
+
+const auth = useAuthStore()
 const newEntry = ref('')
 const journalEntries = ref([])
 const editedText = ref('')
 const editingIndex = ref('')
 
+async function loadEntries() {
+  const userId = await getUserId()
+  if (!userId) return
+
+  const { data, error } = await supabase
+    .from('journal')
+    .select('content, created_at')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error(error.message)
+    return
+  }
+
+  journalEntries.value = data.map((entry) => ({
+    date: new Date(entry.created_at).toLocaleString(),
+    text: entry.content,
+  }))
+}
+
 async function getUserId() {
   const result = await supabase.auth.getUser()
   if (!result.data.user) return null
   return result.data.user.id
-}
-
-onMounted(async () => {
-  const { data: authUser, error } = await supabase.auth.getUser()
-  const user = authUser?.user
-
-  if (user.value) {
-    await loadEntries()
-  }
-})
-
-async function loadEntries() {
-  const { data, error } = await supabase
-    .from('journals')
-    .select('*')
-    .eq('user_id')
-    .order('created_at')
-
-  if (error) {
-    console.error('Error loading entries:', error.message)
-  } else {
-    journalEntries.value = data
-  }
 }
 
 function addEntry() {
