@@ -1,6 +1,6 @@
 @ -1,118 +1,111 @@
 <template>
-  <div>
+  <div v-if="auth.user">
     <h1 class="head">My Journal</h1>
     <form @submit.prevent="addEntry">
       <textarea v-model="newEntry" placeholder="Write new entry here..."></textarea>
@@ -48,6 +48,9 @@
         </div>
       </li>
     </ul>
+  </div>
+  <div v-else>
+    <p>Please log in to view your journal.</p>
   </div>
 </template>
 
