@@ -60,6 +60,12 @@ const journalEntries = ref([])
 const editedText = ref('')
 const editingIndex = ref('')
 
+async function getUserId() {
+  const result = await supabase.auth.getUser()
+  if (!result.data.user) return null
+  return result.data.user.id
+}
+
 onMounted(async () => {
   const { data: authUser, error } = await supabase.auth.getUser()
   const user = authUser?.user
