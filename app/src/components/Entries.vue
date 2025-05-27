@@ -67,13 +67,17 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted } from 'vue'
 
+onMounted(() => {
+  loadEntries()
+})
+
+const auth = useAuthStore()
 const newEntry = ref('')
 const journalEntries = ref([])
 const editedText = ref('')
 const editingIndex = ref('')
-const newTitle = ref('')
 
 async function loadEntries() {
   const userId = await getUserId()
