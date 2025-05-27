@@ -7,6 +7,11 @@ const router = createRouter({
   routes: [
     {
       path: '/',
+      name: 'default',
+      component: () => import('../views/DefaultView.vue'),
+    },
+    {
+      path: '/home',
       name: 'home',
       component: HomeView,
     },
@@ -14,6 +19,11 @@ const router = createRouter({
       path: '/calendar',
       name: 'calendar',
       component: () => import('../views/CalendarView.vue'),
+    },
+    {
+      path: '/entry',
+      name: 'journal',
+      component: () => import('../views/EntriesView.vue'),
     },
     {
       path: '/login',
