@@ -2,8 +2,22 @@
 <template>
   <div v-if="auth.user">
     <h1 class="head">My Journal</h1>
-    <form @submit.prevent="addEntry">
-      <textarea v-model="newEntry" placeholder="Write new entry here..."></textarea>
+    <form @submit.prevent="addEntry" class="space-y-4">
+      <input
+        v-model="newTitle"
+        type="text"
+        placeholder="Title"
+        class="w-full border p-2 rounded"
+        required
+      />
+
+      <textarea
+        v-model="newEntry"
+        placeholder="Write new entry here..."
+        class="w-full h-28 border p-2 rounded"
+        required
+      ></textarea>
+
       <button
         class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
         type="submit"
@@ -18,6 +32,7 @@
         :key="index"
         class="p-4 bg-white rounded shadow-md border border-blue-100"
       >
+        <p class="text-xl font-semibold">{{ entry.title }}</p>
         <p class="text-sm text-gray-500 mb-2">
           📝 Entry on <span class="font-semibold">{{ entry.date }}</span
           >:
@@ -64,6 +79,7 @@ onMounted(() => {
   loadEntries()
 })
 
+const newTitle = ref('')
 const auth = useAuthStore()
 const newEntry = ref('')
 const journalEntries = ref([])
@@ -76,7 +92,7 @@ async function loadEntries() {
 
   const { data, error } = await supabase
     .from('journal')
-    .select('content, created_at')
+    .select('journal_id, title, content, created_at')
     .eq('user_id', userId)
     .order('created_at', { ascending: false })
 
@@ -86,8 +102,10 @@ async function loadEntries() {
   }
 
   journalEntries.value = data.map((entry) => ({
-    date: new Date(entry.created_at).toLocaleString(),
+    id: entry.journal_id,
     text: entry.content,
+    title: entry.title,
+    date: new Date(entry.created_at).toLocaleString(),
   }))
 }
 
@@ -97,15 +115,42 @@ async function getUserId() {
   return result.data.user.id
 }
 
-function addEntry() {
-  if (newEntry.value.trim()) {
-    journalEntries.value.push({
-      date: new Date().toLocaleString(),
-      text: newEntry.value.trim(),
-    })
-    newEntry.value = ''
+async function addEntry() {
+  const userId = await getUserId()
+  if (!userId || !newEntry.value.trim() || !newTitle.value.trim()) return
+
+  const content = newEntry.value.trim()
+  const title = newTitle.value.trim()
+  const createdAt = new Date()
+
+  const { data, error } = await supabase
+    .from('journal')
+    .insert([
+      {
+        user_id: userId,
+        title,
+        content,
+        created_at: createdAt.toISOString(),
+      },
+    ])
+    .select()
+
+  console.log('Insert response:', { data, error })
+
+  if (error) {
+    console.error(error.message)
+    return
   }
-  console.log(journalEntries)
+
+  journalEntries.value.unshift({
+    id: data[0].journal_id,
+    title: title,
+    text: content,
+    date: createdAt.toLocaleString(),
+  })
+
+  newEntry.value = ''
+  newTitle.value = ''
 }
 
 function editEntry(index) {
@@ -113,20 +158,42 @@ function editEntry(index) {
   editedText.value = journalEntries.value[index].text
 }
 
-function saveEdit(index) {
-  if (editedText.value.trim()) {
-    journalEntries.value[index].text = editedText.value.trim()
-    editingIndex.value = null
-    editedText.value = ''
+async function saveEdit(index) {
+  const updatedText = editedText.value.trim()
+  if (!updatedText) return
+
+  const entryId = journalEntries.value[index].id
+
+  const { error } = await supabase
+    .from('journal')
+    .update({ content: updatedText })
+    .eq('journal_id', entryId)
+
+  if (error) {
+    console.error(error.message)
+    return
   }
-  console.log(editedText)
+
+  journalEntries.value[index].text = updatedText
+  editingIndex.value = null
+  editedText.value = ''
 }
 
 function cancelEdit() {
   editingIndex.value = null
   editedText.value = ''
 }
-function deleteEntry(index) {
+
+async function deleteEntry(index) {
+  const entryId = journalEntries.value[index].id
+
+  const { error } = await supabase.from('journal').delete().eq('journal_id', entryId)
+
+  if (error) {
+    console.error(error.message)
+    return
+  }
+
   journalEntries.value.splice(index, 1)
 }
 </script>
