@@ -67,12 +67,16 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import { supabase } from '../lib/supabaseClient'
+import { useAuthStore } from '@/stores/auth'
 import { onMounted } from 'vue'
 
 onMounted(() => {
   loadEntries()
 })
 
+const newTitle = ref('')
 const auth = useAuthStore()
 const newEntry = ref('')
 const journalEntries = ref([])
@@ -137,6 +141,7 @@ async function addEntry() {
 
   journalEntries.value.unshift({
     id: data[0].journal_id,
+    title: title,
     text: content,
     date: createdAt.toLocaleString(),
   })
