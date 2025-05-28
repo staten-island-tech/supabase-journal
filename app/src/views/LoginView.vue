@@ -1,13 +1,13 @@
 <template>
   <div class="min-h-screen flex flex-col items-center text-center p-4">
-    <div v-if="auth.user">
-      <p>Welcome, {{ auth.user.email }}</p>
+    <div v-if="auth.user" class="flex items-center space-x-4">
+      <p>Welcome, {{ auth.user.fullName }}</p>
       <button
-        @click="auth.signOut"
-        class="mt-2 px-4 py-2 text-white rounded"
+        @click="handleSignOut"
+        class="px-4 py-2 text-white rounded"
         style="background-color: var(--vt-c-primary)"
       >
-        Sign Out
+        Sign out
       </button>
     </div>
     <div v-else class="w-full max-w-md">
