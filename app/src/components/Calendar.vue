@@ -5,14 +5,16 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { INITIAL_EVENTS, createEventId } from '../event-utils'
+import { onMounted } from 'vue'
+import { supabase } from '../lib/supabaseClient'
+import { useAuthStore } from '@/stores/auth'
 
-const currentEvents = ref([])
+const auth = useAuthStore()
 
 const calendarOptions = {
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -33,6 +35,42 @@ const calendarOptions = {
   eventsSet: handleEvents,
   events: [],
   contentHeight: 'auto',
+}
+
+onMounted(async () => {
+  await auth.fetchUser?.()
+  await loadJournalEntries()
+})
+
+async function loadJournalEntries() {
+  const userId = await getUserId()
+  if (!userId) return
+
+  const { data, error } = await supabase
+    .from('journal')
+    .select('journal_id, title, content, created_at')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    console.error('Error fetching journal entries:', error.message)
+    return
+  }
+
+  calendarOptions.events = data.map((entry) => ({
+    id: entry.created_at,
+    title: entry.title,
+    start: entry.created_at,
+    allDay: true,
+  }))
+  console.log('Current user from auth store:', auth.user)
+  console.log('User ID for query:', auth.user?.id)
+}
+
+async function getUserId() {
+  const result = await supabase.auth.getUser()
+  if (!result.data.user) return null
+  return result.data.user.id
 }
 
 function handleDateSelect(selectInfo) {
@@ -59,7 +97,7 @@ function handleEventClick(clickInfo) {
 }
 
 function handleEvents(events) {
-  currentEvents.value = events
+  console.log('Events in calendar:', events)
 }
 </script>
 

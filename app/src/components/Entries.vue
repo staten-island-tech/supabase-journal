@@ -75,8 +75,9 @@ import { supabase } from '../lib/supabaseClient'
 import { useAuthStore } from '@/stores/auth'
 import { onMounted } from 'vue'
 
-onMounted(() => {
-  loadEntries()
+onMounted(async () => {
+  await auth.fetchUser()
+  await loadEntries()
 })
 
 const newTitle = ref('')
