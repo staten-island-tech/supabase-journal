@@ -9,7 +9,6 @@ export const useAuthStore = defineStore('auth', () => {
 
   const signInWithPassword = async (email, password) => {
     try {
-      console.log('Signing up with full name:', fullName)
       const { data, error: loginerror } = await supabase.auth.signInWithPassword({
         email: email,
         password: password,
@@ -41,10 +40,6 @@ export const useAuthStore = defineStore('auth', () => {
         },
       })
       if (signUpError) throw signUpError
-      user.value = {
-        ...data.user,
-        full_name: data.user.user_metadata.full_name,
-      }
 
       user.value = data.user
       console.log('New user:', user.value)
