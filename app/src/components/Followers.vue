@@ -6,6 +6,9 @@
 =======
     <button @click="follow(user.id)">follow</button>
     {{ isFollowing(user.id) ? 'Unfollow' : 'Follow' }}
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   </div>
 </template>
