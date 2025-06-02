@@ -1,17 +1,9 @@
 <template>
   <div>
-    <<<<<<< HEAD
-    <h2>Users to Follow</h2>
-    <div v-for="user in users" :key="user.id"></div>
-    <<<<<<< Updated upstream =======
-    <button @click="follow(user.id)">follow</button>
-    {{ isFollowing(user.id) ? 'Unfollow' : 'Follow' }}
-    <<<<<<< Updated upstream >>>>>>> Stashed changes ======= >>>>>>> Stashed changes =======
     <h2>Journly Users</h2>
     <div v-for="user in users" :key="user.id">
       <p>Username: {{ user.full_name }}</p>
     </div>
-    >>>>>>> 53bf9387d67899e8bc4261b4019d5566e847f01d
   </div>
 </template>
 <script>
