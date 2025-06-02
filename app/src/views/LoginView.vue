@@ -77,7 +77,7 @@ const password = ref('')
 
 const newEmail = ref('')
 const newPassword = ref('')
-const fullName = ref('')
+const full_name = ref('')
 
 const login = async () => {
   const success = await auth.signInWithPassword(email.value, password.value)
@@ -89,7 +89,7 @@ const login = async () => {
 }
 
 const signup = async () => {
-  await auth.signUp(newEmail.value, newPassword.value, fullName.value)
+  await auth.signUp(newEmail.value, newPassword.value, full_name.value)
 }
 </script>
 

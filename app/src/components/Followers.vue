@@ -1,12 +1,13 @@
 <template>
   <div>
     <h2>Journly Users</h2>
-    <div v-for="user in users" :key="user.id">
-      <p>Username: {{ user.full_name }}</p>
-    </div>
+    <p v-for="user in users" :key="user.id" class="mb-2">
+      Name: {{ user.full_name }} ({{ user.email }})
+      <button class="bg-red-200" @click="follow(user.id)">Follow</button>
+    </p>
   </div>
 </template>
-<script>
+<script setup>
 import { ref, onMounted } from 'vue'
 import { supabase } from '../lib/supabaseClient'
 
