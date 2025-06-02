@@ -1,21 +1,28 @@
 <template>
   <div>
-    <h2>Users to Follow</h2>
-    <div v-for="user in users" :key="user.id"></div>
+    <h2>Journly Users</h2>
+    <div v-for="user in users" :key="user.id">
+      <p>Username: {{ user.full_name }}</p>
+    </div>
   </div>
 </template>
-
 <script>
-import { SupabaseClient } from '@supabase/supabase-js'
+import { ref, onMounted } from 'vue'
+import { supabase } from '../lib/supabaseClient'
 
-const currentUser = await supabase.auth.admin.getUserById(1)
+const users = ref([])
 
-const { data: allUsers } = await supabase.from('users').select('id, email').neq('id', currentUser)
+onMounted(async () => {
+  const { data: userData } = await supabase.auth.getUser()
+  const currentUserId = userData.user.id
 
-const { data: following } = await supabase
-  .from('follows')
-  .select('followee_id')
-  .eq('follower_id', currentUser)
+  const { data: allUsers } = await supabase
+    .from('users')
+    .select('id, email, full_name')
+    .neq('id', currentUserId)
+
+  users.value = allUsers
+})
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped></style>
