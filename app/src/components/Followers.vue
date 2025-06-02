@@ -1,33 +1,36 @@
 <template>
   <div>
+    <<<<<<< HEAD
     <h2>Users to Follow</h2>
     <div v-for="user in users" :key="user.id"></div>
-<<<<<<< Updated upstream
-=======
+    <<<<<<< Updated upstream =======
     <button @click="follow(user.id)">follow</button>
     {{ isFollowing(user.id) ? 'Unfollow' : 'Follow' }}
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+    <<<<<<< Updated upstream >>>>>>> Stashed changes ======= >>>>>>> Stashed changes =======
+    <h2>Journly Users</h2>
+    <div v-for="user in users" :key="user.id">
+      <p>Username: {{ user.full_name }}</p>
+    </div>
+    >>>>>>> 53bf9387d67899e8bc4261b4019d5566e847f01d
   </div>
 </template>
-
 <script>
-import { SupabaseClient } from '@supabase/supabase-js'
+import { ref, onMounted } from 'vue'
+import { supabase } from '../lib/supabaseClient'
 
-const currentUser = await supabase.auth.admin.getUserById(1)
-const users =
-const followedusers=
+const users = ref([])
 
-const { data: allUsers } = await supabase.from('users').select('id, email').neq('id', currentUser)
+onMounted(async () => {
+  const { data: userData } = await supabase.auth.getUser()
+  const currentUserId = userData.user.id
 
-const { data: following } = await supabase
-  .from('follows')
-  .select('followee_id')
-  .eq('follower_id', currentUser)
+  const { data: allUsers } = await supabase
+    .from('users')
+    .select('id, email, full_name')
+    .neq('id', currentUserId)
 
-function follow() {}
+  users.value = allUsers
+})
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped></style>
