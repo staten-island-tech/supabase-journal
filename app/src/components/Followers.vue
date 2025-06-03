@@ -14,8 +14,8 @@ import { supabase } from '../lib/supabaseClient'
 const users = ref([])
 
 onMounted(async () => {
-  const { data: userData } = await supabase.auth.getUser()
-  const currentUserId = userData.user.id
+  const { data: userdata } = await supabase.auth.getUser()
+  const currentUserId = userdata.user.id
 
   const { data: allUsers } = await supabase
     .from('users')
@@ -24,6 +24,13 @@ onMounted(async () => {
 
   users.value = allUsers
 })
+
+async function follow(followeeId) {
+  const { data: userData } = await supabase.auth.getUser()
+  const followerId = userData.user.id
+
+  await supabase.from('follows').insert([{ follower_id: followerId, followee_id: followeeId }])
+}
 </script>
 
 <style scoped></style>

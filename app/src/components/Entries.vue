@@ -67,9 +67,6 @@
   <div v-else>
     <p>Please log in to view your journal.</p>
   </div>
-  <div v-else>
-    <p>Please log in to view your journal.</p>
-  </div>
 </template>
 
 <script setup>
@@ -154,21 +151,6 @@ async function addEntry() {
 
   newEntry.value = ''
   newTitle.value = ''
-}
-
-const addJournalEntry = async () => {
-  const { data, error } = await supabase.from('journal').insert([
-    {
-      title: title.value,
-      content: content.value,
-    },
-  ])
-}
-
-async function getUserId() {
-  const result = await supabase.auth.getUser()
-  if (!result.data.user) return null
-  return result.data.user.id
 }
 
 function editEntry(index) {
