@@ -1,6 +1,6 @@
 @ -1,118 +1,111 @@
 <template>
-  <div v-if="auth.user">
+  <div v-if="auth.user" class="space-y-6">
     <h1 class="head">My Journal</h1>
     <form @submit.prevent="addEntry" class="space-y-4">
       <input
