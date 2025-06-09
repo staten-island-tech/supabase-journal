@@ -1,11 +1,11 @@
 <template>
   <div class="min-h-screen flex flex-col items-center text-center p-4">
-    <Followers :entries="entries" />
+    <Following />
   </div>
 </template>
 
 <script setup>
-import Followers from '../components/Followers.vue'
+import Following from '../components/FollowingPage.vue'
 </script>
 
 <style scoped></style>
