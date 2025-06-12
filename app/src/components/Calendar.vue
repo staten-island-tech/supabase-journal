@@ -70,11 +70,13 @@ async function handleDateSelect(selectInfo) {
           user_id: userId,
         },
       ])
-      .select()
+      .select('event_id, title, start, end, all_day')
 
     if (error) {
       console.error('Error saving event:', error.message)
       return
+    } else {
+      await loadEvents()
     }
   }
 }
@@ -97,7 +99,7 @@ async function loadEvents() {
 
   data.forEach((event) => {
     calendarApi.addEvent({
-      id: event.id,
+      id: event.event_id,
       title: event.title,
       start: event.start,
       end: event.end,
@@ -108,7 +110,7 @@ async function loadEvents() {
 
 async function handleEventClick(clickInfo) {
   if (confirm(`Are you sure you want to delete '${clickInfo.event.title}'?`)) {
-    const { error } = await supabase.from('events').delete().eq('id', clickInfo.event.id)
+    const { error } = await supabase.from('events').delete().eq('event_id', clickInfo.event.id)
 
     if (!error) clickInfo.event.remove()
     else console.error('Failed to delete event:', error.message)
