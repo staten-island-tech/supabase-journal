@@ -26,14 +26,14 @@ onMounted(async () => {
   const userId = userData?.user?.id
   if (!userId) return
 
-
   const { data: follows } = await supabase
     .from('follows')
     .select('followee_id')
     .eq('follower_id', userId)
   if (!follows) return
 
-onMounted
+  const { data: followerentries } = await supabase.from('journal').select().eq('followee_id')
+})
 </script>
 
 <style scoped></style>
