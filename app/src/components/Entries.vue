@@ -70,13 +70,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { supabase } from '../lib/supabaseClient'
 import { useAuthStore } from '@/stores/auth'
-import { onMounted } from 'vue'
 
-onMounted(() => {
-  loadEntries()
+onMounted(async () => {
+  await auth.fetchUser()
+  await loadEntries()
 })
 
 const newTitle = ref('')

@@ -91,6 +91,11 @@ const login = async () => {
 const signup = async () => {
   await auth.signUp(newEmail.value, newPassword.value, fullName.value)
 }
+
+const handleSignOut = async () => {
+  await auth.signOut()
+  router.push('/')
+}
 </script>
 
 <style>
