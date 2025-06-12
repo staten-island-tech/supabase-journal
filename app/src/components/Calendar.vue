@@ -9,14 +9,13 @@ import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import { createEventId } from '../event-utils'
 import { onMounted, ref } from 'vue'
 import { supabase } from '../lib/supabaseClient'
 import { useAuthStore } from '@/stores/auth'
 
 const auth = useAuthStore()
 const calendarRef = ref(null)
-const calendarEvents = ref()
+const calendarEvents = ref([])
 
 const calendarOptions = {
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -33,8 +32,9 @@ const calendarOptions = {
   weekends: true,
   select: handleDateSelect,
   eventClick: handleEventClick,
-  events: [],
+  events: calendarEvents.value,
   contentHeight: 'auto',
+  timeZone: 'UTC',
 }
 
 onMounted(async () => {
@@ -59,7 +59,7 @@ async function handleDateSelect(selectInfo) {
     const userId = await getUserId()
     if (!userId) return
 
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('events')
       .insert([
         {
@@ -108,7 +108,7 @@ async function loadEvents() {
 
 async function handleEventClick(clickInfo) {
   if (confirm(`Are you sure you want to delete '${clickInfo.event.title}'?`)) {
-    const { error } = await supabase.from('calendar_events').delete().eq('id', clickInfo.event.id)
+    const { error } = await supabase.from('events').delete().eq('id', clickInfo.event.id)
 
     if (!error) clickInfo.event.remove()
     else console.error('Failed to delete event:', error.message)
