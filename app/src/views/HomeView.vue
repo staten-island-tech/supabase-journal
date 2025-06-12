@@ -98,7 +98,7 @@ async function getUserId() {
 
 const profile = ref({
   full_name: '',
-  avatar_url: null,
+  avatar_url: '',
   bio: '',
 })
 
