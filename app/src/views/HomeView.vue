@@ -8,8 +8,8 @@
           <RouterLink to="/home" class="hover:font-bold">Home</RouterLink>
           <RouterLink to="/entry" class="hover:font-bold">Journal</RouterLink>
           <RouterLink to="/calendar" class="hover:font-bold">Calendar</RouterLink>
-          <div v-if="auth.user" class="flex items-center space-x-4">
-            <p>Welcome, {{ auth.user.full_name }}</p>
+          <div v-if="user" class="flex items-center space-x-4">
+            <p>Welcome, {{ user.full_name }}</p>
             <button
               @click="handleSignOut"
               class="px-4 py-2 text-white rounded"
@@ -32,6 +32,8 @@
 <script setup>
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { supabase } from '@/lib/supabaseClient'
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -39,4 +41,19 @@ const handleSignOut = async () => {
   await auth.signOut()
   router.push('/')
 }
+
+onMounted(async () => {
+  const { data: userData } = await supabase.auth.getUser()
+  const userId = userData?.user?.id
+
+  const user = ref(null)
+
+  if (userId) {
+    const { data: userData, error } = await supabase.from('profiles').select().eq('id', userId)
+
+    if (!error) {
+      user.value = userData
+    }
+  }
+})
 </script>
