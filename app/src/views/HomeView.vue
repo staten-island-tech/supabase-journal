@@ -8,8 +8,8 @@
           <RouterLink to="/home" class="hover:font-bold">Home</RouterLink>
           <RouterLink to="/entry" class="hover:font-bold">Journal</RouterLink>
           <RouterLink to="/calendar" class="hover:font-bold">Calendar</RouterLink>
-          <div v-if="auth.user" class="flex items-center space-x-4">
-            <p>Welcome, {{ auth.user.full_name || auth.user.email }}</p>
+          <div v-if="user" class="flex items-center space-x-4">
+            <p>Welcome, {{ user.full_name }}</p>
             <button
               @click="handleSignOut"
               class="px-4 py-2 text-white rounded"
@@ -108,118 +108,34 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
-import { supabase } from '../lib/supabaseClient'
+import { ref, onMounted } from 'vue'
+import { supabase } from '@/lib/supabaseClient'
 
 const router = useRouter()
 const auth = useAuthStore()
-const saving = ref(false)
-const isEditing = ref(false)
-const hasEdits = ref(false)
-const avatarUrl = ref('')
+const user = ref(null)
 
 const handleSignOut = async () => {
   await auth.signOut()
   router.push('/')
 }
 
-async function getUserId() {
-  const result = await supabase.auth.getUser()
-  if (!result.data.user) return null
-  return result.data.user.id
-}
-
-const loadProfile = async () => {
-  await auth.fetchUser()
-  if (!auth.user) {
-    router.push('/login')
-    return
-  }
-  const userId = await getUserId()
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('full_name, avatar_url, bio')
-    .eq('id', userId)
-    .single()
-
-  if (!error && data) {
-    profile.value = { ...profile.value, ...data }
-  }
-}
-
-const profile = ref({
-  avatar_url: '',
-  bio: '',
-})
-
-const initials = computed(() => {
-  const name = profile.value.full_name || ''
-  return name
-    .split(' ')
-    .map((n) => n[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase()
-})
-
 onMounted(async () => {
-  loadProfile()
-})
+  const { data: userData } = await supabase.auth.getUser()
+  const userId = userData.user.id
 
-const setAvatar = () => {
-  if (!isEditing.value) return alert('Click Edit first.')
-  if (!avatarUrl.value) return alert('Please paste an image URL.')
+  if (userId) {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('full_name')
+      .eq('id', userId)
+      .single()
 
-  profile.value.avatar_url = avatarUrl.value
-  hasEdits.value = true
-  alert('Avatar set from URL!')
-}
-
-const onEdit = () => {
-  if (!isEditing.value) isEditing.value = true
-  hasEdits.value = true
-}
-
-const saveProfile = async () => {
-  if (!auth.user) {
-    alert('No user logged in.')
-    return
-  }
-
-  saving.value = true
-
-  const updates = {
-    id: auth.user.id,
-    full_name: profile.value.full_name,
-    avatar_url: profile.value.avatar_url,
-    bio: profile.value.bio,
-    updated_at: new Date().toISOString(),
-  }
-
-  const { error } = await supabase.from('profiles').upsert(updates)
-
-  saving.value = false
-
-  if (error) {
-    alert('Error saving profile: ' + error.message)
-  } else {
-    alert('Profile updated!')
-    hasEdits.value = false
-    isEditing.value = false
-  }
-}
-
-const handleButtonClick = async () => {
-  if (!isEditing.value) {
-    isEditing.value = true
-  } else {
-    if (!hasEdits.value) {
-      isEditing.value = false
-      return
+    if (!error) {
+      user.value = data
     }
-    await saveProfile()
   }
-}
+})
 </script>
