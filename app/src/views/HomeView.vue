@@ -48,7 +48,9 @@
         </div>
 
         <div class="flex items-center space-x-4 mt-4 space-y-5">
+          <label for="avatarUrl" class="sr-only">Avatar Image URL</label>
           <input
+            id="avatarUrl"
             v-model="avatarUrl"
             type="url"
             placeholder="Paste image URL"
@@ -62,10 +64,13 @@
           </button>
         </div>
 
-        <div class="space-y-5">
+        <div class="space-y-5 mt-6">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+            <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1"
+              >Full Name</label
+            >
             <input
+              id="fullName"
               v-model="profile.full_name"
               type="text"
               :disabled="!isEditing"
@@ -76,8 +81,9 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Bio</label>
+            <label for="bio" class="block text-sm font-medium text-gray-700 mb-1">Bio</label>
             <textarea
+              id="bio"
               v-model="profile.bio"
               :disabled="!isEditing"
               @input="onEdit"
