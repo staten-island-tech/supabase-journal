@@ -110,34 +110,118 @@
 </template>
 
 <script setup>
+import { ref, computed, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
-import { ref, onMounted } from 'vue'
-import { supabase } from '@/lib/supabaseClient'
+import { supabase } from '../lib/supabaseClient'
 
 const router = useRouter()
 const auth = useAuthStore()
-const user = ref(null)
+const saving = ref(false)
+const isEditing = ref(false)
+const hasEdits = ref(false)
+const avatarUrl = ref('')
 
 const handleSignOut = async () => {
   await auth.signOut()
   router.push('/')
 }
 
-onMounted(async () => {
-  const { data: userData } = await supabase.auth.getUser()
-  const userId = userData.user.id
+async function getUserId() {
+  const result = await supabase.auth.getUser()
+  if (!result.data.user) return null
+  return result.data.user.id
+}
 
-  if (userId) {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('full_name')
-      .eq('id', userId)
-      .single()
-
-    if (!error) {
-      user.value = data
-    }
+const loadProfile = async () => {
+  await auth.fetchUser()
+  if (!auth.user) {
+    router.push('/login')
+    return
   }
+  const userId = await getUserId()
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('full_name, avatar_url, bio')
+    .eq('id', userId)
+    .single()
+
+  if (!error && data) {
+    profile.value = { ...profile.value, ...data }
+  }
+}
+
+const profile = ref({
+  avatar_url: '',
+  bio: '',
 })
+
+const initials = computed(() => {
+  const name = profile.value.full_name || ''
+  return name
+    .split(' ')
+    .map((n) => n[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase()
+})
+
+onMounted(async () => {
+  loadProfile()
+})
+
+const setAvatar = () => {
+  if (!isEditing.value) return alert('Click Edit first.')
+  if (!avatarUrl.value) return alert('Please paste an image URL.')
+
+  profile.value.avatar_url = avatarUrl.value
+  hasEdits.value = true
+  alert('Avatar set from URL!')
+}
+
+const onEdit = () => {
+  if (!isEditing.value) isEditing.value = true
+  hasEdits.value = true
+}
+
+const saveProfile = async () => {
+  if (!auth.user) {
+    alert('No user logged in.')
+    return
+  }
+
+  saving.value = true
+
+  const updates = {
+    id: auth.user.id,
+    full_name: profile.value.full_name,
+    avatar_url: profile.value.avatar_url,
+    bio: profile.value.bio,
+    updated_at: new Date().toISOString(),
+  }
+
+  const { error } = await supabase.from('profiles').upsert(updates)
+
+  saving.value = false
+
+  if (error) {
+    alert('Error saving profile: ' + error.message)
+  } else {
+    alert('Profile updated!')
+    hasEdits.value = false
+    isEditing.value = false
+  }
+}
+
+const handleButtonClick = async () => {
+  if (!isEditing.value) {
+    isEditing.value = true
+  } else {
+    if (!hasEdits.value) {
+      isEditing.value = false
+      return
+    }
+    await saveProfile()
+  }
+}
 </script>
