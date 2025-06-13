@@ -15,7 +15,8 @@
             <button
               @click="handleSignOut"
               class="px-4 py-2 text-white rounded"
-              style="background-color: var(--vt-c-primary)"
+              style="background-color: #1e40af"
+              aria-label="Sign out"
             >
               Sign out
             </button>
