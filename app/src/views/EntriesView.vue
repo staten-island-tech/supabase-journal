@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen px-6 pt-20">
+  <div class="min-h-screen px-6">
     <header class="w-full bg-white shadow-sm fixed top-0 left-0 right-0 z-50">
       <div class="px-16 py-4 flex items-center justify-between">
         <div class="text-2xl font-extrabold">Journally</div>

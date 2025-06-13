@@ -13,7 +13,10 @@ export const useAuthStore = defineStore('auth', () => {
         email: email,
         password: password,
       })
-      if (loginerror) throw loginerror
+      if (loginerror) {
+        alert(`Please check your credentials!`)
+        throw loginerror
+      }
 
       user.value = data.user
       console.log('User:', user.value)
@@ -51,5 +54,14 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  return { user, signInWithPassword, signUp, signOut }
+  const fetchUser = async () => {
+    const { data } = await supabase.auth.getUser()
+    if (data?.user) {
+      user.value = data.user
+    } else {
+      user.value = null
+    }
+  }
+
+  return { user, signInWithPassword, signUp, signOut, fetchUser }
 })
