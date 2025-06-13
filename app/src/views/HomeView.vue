@@ -37,6 +37,8 @@ import { supabase } from '@/lib/supabaseClient'
 
 const router = useRouter()
 const auth = useAuthStore()
+const user = ref(null)
+
 const handleSignOut = async () => {
   await auth.signOut()
   router.push('/')
@@ -44,15 +46,17 @@ const handleSignOut = async () => {
 
 onMounted(async () => {
   const { data: userData } = await supabase.auth.getUser()
-  const userId = userData?.user?.id
-
-  const user = ref(null)
+  const userId = userData.user.id
 
   if (userId) {
-    const { data: userData, error } = await supabase.from('profiles').select().eq('id', userId)
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('full_name')
+      .eq('id', userId)
+      .single()
 
     if (!error) {
-      user.value = userData
+      user.value = data
     }
   }
 })
