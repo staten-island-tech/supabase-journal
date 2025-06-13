@@ -12,6 +12,7 @@ import { RouterView } from 'vue-router'
         <RouterLink to="/entry">Journal</RouterLink>
         <RouterLink to="/calendar">Calendar</RouterLink>
         <RouterLink to="/follower">Followers List</RouterLink>
+        <RouterLink to="followerjournals">View Other Journals</RouterLink>
       </nav>
       <RouterView />
     </div>

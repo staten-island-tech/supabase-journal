@@ -35,6 +35,11 @@ const router = createRouter({
       name: 'follower',
       component: () => import('../views/FollowerView.vue'),
     },
+    {
+      path: '/followerjournals',
+      name: 'followerjournals',
+      component: () => import('../views/FollowingPageView.vue'),
+    },
   ],
 })
 
