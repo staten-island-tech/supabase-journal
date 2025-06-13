@@ -6,57 +6,92 @@
         @click="handleSignOut"
         class="px-4 py-2 text-white rounded"
         style="background-color: var(--vt-c-primary)"
+        aria-label="Sign out"
       >
         Sign out
       </button>
     </div>
+
     <div v-else class="w-full max-w-md">
-      <h1 class="text-2xl font-bold mb-4">Please Login!</h1>
-      <form @submit.prevent="login" class="space-y-2 mb-6">
-        <input
-          v-model="email"
-          type="email"
-          placeholder="Email"
-          class="w-full px-4 py-2 border rounded"
-        />
-        <input
-          v-model="password"
-          type="password"
-          placeholder="Password"
-          class="w-full px-4 py-2 border rounded"
-        />
+      <h1 class="text-2xl font-bold mb-4">Please Log In</h1>
+
+      <form @submit.prevent="login" class="space-y-2 mb-6" aria-label="Login form">
+        <div class="text-left">
+          <label for="login-email" class="block text-sm font-medium">Email</label>
+          <input
+            id="login-email"
+            v-model="email"
+            type="email"
+            placeholder="Email"
+            class="w-full px-4 py-2 border rounded"
+            required
+          />
+        </div>
+
+        <div class="text-left">
+          <label for="login-password" class="block text-sm font-medium">Password</label>
+          <input
+            id="login-password"
+            v-model="password"
+            type="password"
+            placeholder="Password"
+            class="w-full px-4 py-2 border rounded"
+            required
+          />
+        </div>
+
         <button
           type="submit"
           class="w-full px-4 py-2 text-white rounded"
           style="background-color: var(--vt-c-accent)"
+          aria-label="Submit login"
         >
           Submit
         </button>
       </form>
 
-      <form @submit.prevent="signup" class="space-y-2 mb-6">
-        <input
-          v-model="newEmail"
-          type="email"
-          placeholder="New Email"
-          class="w-full px-4 py-2 border rounded"
-        />
-        <input
-          v-model="newPassword"
-          type="password"
-          placeholder="New Password"
-          class="w-full px-4 py-2 border rounded"
-        />
-        <input
-          v-model="fullName"
-          type="text"
-          placeholder="Full Name"
-          class="w-full px-4 py-2 border rounded"
-        />
+      <form @submit.prevent="signup" class="space-y-2 mb-6" aria-label="Sign up form">
+        <div class="text-left">
+          <label for="signup-email" class="block text-sm font-medium">New Email</label>
+          <input
+            id="signup-email"
+            v-model="newEmail"
+            type="email"
+            placeholder="New Email"
+            class="w-full px-4 py-2 border rounded"
+            required
+          />
+        </div>
+
+        <div class="text-left">
+          <label for="signup-password" class="block text-sm font-medium">New Password</label>
+          <input
+            id="signup-password"
+            v-model="newPassword"
+            type="password"
+            placeholder="New Password"
+            class="w-full px-4 py-2 border rounded"
+            required
+          />
+        </div>
+
+        <div class="text-left">
+          <label for="signup-fullname" class="block text-sm font-medium">Full Name</label>
+          <input
+            id="signup-fullname"
+            v-model="fullName"
+            type="text"
+            placeholder="Full Name"
+            class="w-full px-4 py-2 border rounded"
+            required
+          />
+        </div>
+
         <button
           type="submit"
           class="w-full px-4 py-2 text-white rounded"
           style="background-color: var(--vt-c-accent)"
+          aria-label="Sign up"
         >
           Sign Up
         </button>
