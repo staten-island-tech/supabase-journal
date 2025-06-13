@@ -3,20 +3,28 @@
   <div v-if="auth.user" class="space-y-6">
     <h1 class="head">My Journal</h1>
     <form @submit.prevent="addEntry" class="space-y-4">
-      <input
-        v-model="newTitle"
-        type="text"
-        placeholder="Title"
-        class="w-full border p-2 rounded"
-        required
-      />
+      <div>
+        <label for="journal-title" class="block text-sm font-medium text-gray-700">Title</label>
+        <input
+          id="journal-title"
+          v-model="newTitle"
+          type="text"
+          placeholder="Title"
+          class="w-full border p-2 rounded"
+          required
+        />
+      </div>
 
-      <textarea
-        v-model="newEntry"
-        placeholder="Write new entry here..."
-        class="w-full h-28 border p-2 rounded"
-        required
-      ></textarea>
+      <div>
+        <label for="journal-entry" class="block text-sm font-medium text-gray-700">Entry</label>
+        <textarea
+          id="journal-entry"
+          v-model="newEntry"
+          placeholder="Write new entry here..."
+          class="w-full h-28 border p-2 rounded"
+          required
+        ></textarea>
+      </div>
 
       <button
         class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
@@ -39,7 +47,14 @@
         </p>
 
         <div v-if="editingIndex === index">
-          <textarea v-model="editedText" class="w-full h-40 border rounded p-2 mb-2"></textarea>
+          <label :for="`edit-entry-${index}`" class="block text-sm font-medium text-gray-700"
+            >Edit Entry</label
+          >
+          <textarea
+            :id="`edit-entry-${index}`"
+            v-model="editedText"
+            class="w-full h-40 border rounded p-2 mb-2"
+          ></textarea>
           <button @click="saveEdit(index)" class="bg-green-300 text-white px-3 py-1 mr-2 rounded">
             Save
           </button>
