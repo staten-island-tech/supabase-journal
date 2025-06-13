@@ -8,6 +8,8 @@
           <RouterLink to="/home" class="hover:font-bold">Home</RouterLink>
           <RouterLink to="/entry" class="hover:font-bold">Journal</RouterLink>
           <RouterLink to="/calendar" class="hover:font-bold">Calendar</RouterLink>
+          <RouterLink to="/follower" class="hover:font-bold">Followers List</RouterLink>
+          <RouterLink to="followerjournals" class="hover:font-bold">View Other Journals</RouterLink>
           <div v-if="auth.user" class="flex items-center space-x-4">
             <p>Welcome, {{ auth.user.full_name || auth.user.email }}</p>
             <button

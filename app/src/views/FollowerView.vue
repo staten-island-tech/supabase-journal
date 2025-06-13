@@ -7,7 +7,7 @@
         <div class="ml-auto flex items-center space-x-6">
           <RouterLink to="/home" class="hover:font-bold">Home</RouterLink>
           <RouterLink to="/entry" class="hover:font-bold">Journal</RouterLink>
-          <RouterLink to="/follower" class="hover:font-bold">Followers List</RouterLink>
+          <RouterLink to="/calendar" class="hover:font-bold">Calendar</RouterLink>
           <RouterLink to="followerjournals" class="hover:font-bold">View Other Journals</RouterLink>
         </div>
       </div>
@@ -15,12 +15,12 @@
     <main class="flex-grow mt-20">
       <RouterView />
     </main>
-    <Calendar />
+    <Followers :entries="entries" />
   </div>
 </template>
 
 <script setup>
-import Calendar from '../components/Calendar.vue'
+import Followers from '../components/Followers.vue'
 </script>
 
-<style></style>
+<style scoped></style>
