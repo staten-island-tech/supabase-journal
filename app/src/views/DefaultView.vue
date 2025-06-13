@@ -1,7 +1,3 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-</script>
-
 <template>
   <div class="min-h-screen px-6 pt-20">
     <header class="w-full bg-white shadow-sm fixed top-0 left-0 right-0 z-50">
@@ -24,6 +20,7 @@ import { RouterLink, RouterView } from 'vue-router'
         <p class="text-lg text-gray-600 mb-4">
           Your personal space to write, reflect, and grow. Start journaling today.
         </p>
+        <img src="/Logo.svg" alt="Logo" width="500" height="500" />
       </div>
 
       <div class="flex-1 max-w-lg">
@@ -36,5 +33,9 @@ import { RouterLink, RouterView } from 'vue-router'
     </div>
   </div>
 </template>
+
+<script setup>
+import { RouterLink, RouterView } from 'vue-router'
+</script>
 
 <style scoped></style>
