@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Journly Users</h2>
+    <h2>Journally Users</h2>
     <p v-for="user in users" :key="user.id" class="mb-2">
       Name: {{ user.full_name }} ({{ user.email }})
       <button class="bg-red-200" @click="follow(user.id)">Follow</button>
@@ -26,10 +26,15 @@ onMounted(async () => {
 })
 
 async function follow(followeeId) {
-  const { data: userData } = await supabase.auth.getUser()
+  const { data: userData, error } = await supabase.auth.getUser()
   const followerId = userData.user.id
 
   await supabase.from('follows').insert([{ follower_id: followerId, followee_id: followeeId }])
+  if (!error) {
+    alert('Followed! Go to View Other Journals.')
+  } else {
+    alert('Failed to follow.')
+  }
 }
 </script>
 
